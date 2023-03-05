@@ -16,6 +16,7 @@ run/main_scene="res://locations/main.tscn"
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
+theme/custom="res://default_theme.tres"
 
 [importer_defaults]
 
