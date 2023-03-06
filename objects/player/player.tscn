@@ -1,10 +1,27 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://objects/player/player.gd" type="Script" id=1]
+[ext_resource path="res://sprites/cloud.png" type="Texture" id=2]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.25
 height = 0.25
+
+[sub_resource type="SpatialMaterial" id=7]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+albedo_texture = ExtResource( 2 )
+
+[sub_resource type="QuadMesh" id=8]
+material = SubResource( 7 )
+size = Vector2( 0.1, 0.1 )
+
+[sub_resource type="Gradient" id=9]
+offsets = PoolRealArray( 0.822695, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
 [node name="player" type="KinematicBody"]
 script = ExtResource( 1 )
@@ -28,3 +45,19 @@ grow_horizontal = 0
 grow_vertical = 0
 text = "test value"
 align = 2
+
+[node name="Particles" type="CPUParticles" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0 )
+cast_shadow = 0
+emitting = false
+lifetime = 2.0
+local_coords = false
+mesh = SubResource( 8 )
+emission_shape = 1
+emission_sphere_radius = 0.1
+spread = 180.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 0.1
+initial_velocity_random = 1.0
+scale_amount = 1.5
+color_ramp = SubResource( 9 )

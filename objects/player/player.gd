@@ -76,6 +76,8 @@ func _physics_process(delta):
 	move_and_slide_with_snap(velocity, snap, Vector3.UP, true)
 
 func _process(delta):
+	$Particles.emitting = current_state == "RUN"
+	
 	if Input.is_action_just_pressed("restart"):
 		translation = Vector3.ZERO
 	
