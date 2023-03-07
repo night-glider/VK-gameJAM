@@ -105,6 +105,8 @@ func slide_state():
 	#velocity.x = lerp(velocity.x, velocity_target.x, 0.005)
 	#velocity.z = lerp(velocity.z, velocity_target.z, 0.005)
 	
+	pickaxe.rotation_degrees.z = lerp(pickaxe.rotation_degrees.z, 30, 0.1)
+	
 	velocity = current_direction * (speed+1)
 	apply_gravity()
 	
@@ -125,7 +127,7 @@ func picked_state():
 		pickaxe.reset()
 		pickaxe.get_parent().remove_child(pickaxe)
 		$Camera.add_child(pickaxe)
-		pickaxe.translation = Vector3(0.111, -0.128, -0.239)
+		pickaxe.translation = Vector3(0.111, -0.088, -0.278)
 		pickaxe.rotation = Vector3.ZERO
 		$Camera.translation = Vector3(0,0.25,0)
 	
@@ -176,6 +178,8 @@ func _process(delta):
 	if Input.is_action_just_pressed("restart"):
 		translation = Vector3.ZERO
 	
+	if current_state != "SLIDE":
+		pickaxe.rotation_degrees.z = lerp(pickaxe.rotation_degrees.z, 0, 0.1)
 	
 	rotation_degrees.y -= mouse_delta.x * 0.1
 	$Camera.rotation_degrees.x -= mouse_delta.y * 0.1

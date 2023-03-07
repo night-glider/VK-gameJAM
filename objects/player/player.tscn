@@ -42,7 +42,7 @@ debug_shape_custom_color = Color( 1, 0, 0, 1 )
 
 [node name="pickaxe" parent="Camera" instance=ExtResource( 3 )]
 unique_name_in_owner = true
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.110566, -0.127649, -0.239415 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.110566, -0.08839, -0.277708 )
 
 [node name="Label" type="Label" parent="."]
 anchor_left = 1.0
