@@ -174,7 +174,7 @@ cast_shadow = 0
 pixel_size = 0.02
 double_sided = false
 alpha_cut = 1
-text = "ЛКМ - зацепиться за стегну 
+text = "ЛКМ - зацепиться за стену 
 (только когда в прыжке)
 Пробел - отпрыгнуть от стены"
 
@@ -187,12 +187,14 @@ alpha_cut = 1
 text = "Пробел - прыжок"
 
 [node name="Label3D4" type="Label3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -7.62117 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.179113, 0, -7.62117 )
 cast_shadow = 0
 pixel_size = 0.02
 double_sided = false
 alpha_cut = 1
-text = "Ctrl - подкат"
+text = "Ctrl - подкат
+Прыжок из подката  
+дальше обычного"
 
 [node name="Label3D2" type="Label3D" parent="."]
 transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -25, 6, 0 )

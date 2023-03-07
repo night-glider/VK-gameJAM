@@ -36,7 +36,7 @@ var current_state := "IDLE"
 
 func print_stats():
 	var result = "Состояние: {0}\nСкорость: {1}\nНа полу: {2}"
-	result = result.format([current_state, speed, is_on_floor()])
+	result = result.format([current_state, stepify(velocity.length(), 0.1), is_on_floor()])
 	return result
 
 func state_calculate():
@@ -79,6 +79,13 @@ func in_air_state():
 	velocity.x = lerp(velocity.x, velocity_target.x, 0.05)
 	velocity.z = lerp(velocity.z, velocity_target.z, 0.05)
 	
+	if velocity.y < -3:
+		$Camera.h_offset = lerp($Camera.h_offset,randf() * velocity.y * 0.002,0.5)
+		$Camera.v_offset = lerp($Camera.v_offset,randf() * velocity.y * 0.002,0.5)
+	else:
+		$Camera.h_offset = 0
+		$Camera.v_offset = 0
+	
 	if Input.is_action_just_pressed("pick"):
 		if $Camera/RayCast.is_colliding():
 			print($Camera/RayCast.get_collision_normal())
@@ -92,10 +99,21 @@ func in_air_state():
 			current_state = "PICKED"
 
 func slide_state():
+	var current_direction = Vector3(velocity.x, 0, velocity.z).normalized()
+	current_direction.x = lerp(current_direction.x, input.x, 0.02)
+	current_direction.z = lerp(current_direction.z, input.z, 0.02)
+	#velocity.x = lerp(velocity.x, velocity_target.x, 0.005)
+	#velocity.z = lerp(velocity.z, velocity_target.z, 0.005)
+	
+	velocity = current_direction * (speed+1)
 	apply_gravity()
-	var velocity_target = input * speed
-	velocity.x = lerp(velocity.x, velocity_target.x, 0.005)
-	velocity.z = lerp(velocity.z, velocity_target.z, 0.005)
+	
+	if Input.is_action_just_pressed("jump"):
+		velocity.y = jump_force
+		snap = Vector3.ZERO
+		velocity.y *= 0.8
+		velocity.x *= 3
+		velocity.z *= 3
 
 func picked_state():
 	velocity = global_transform.origin.direction_to(pick_point)
@@ -153,7 +171,7 @@ func _process(delta):
 	else:
 		$aim.visible = false
 	
-	$run_particles.emitting = current_state == "RUN"
+	$run_particles.emitting = current_state in ["RUN"]
 	
 	if Input.is_action_just_pressed("restart"):
 		translation = Vector3.ZERO
@@ -164,7 +182,7 @@ func _process(delta):
 	$Camera.rotation_degrees.x = clamp($Camera.rotation_degrees.x, -90, 90)
 	
 	
-	if current_state in ["RUN", "IN_AIR"]:
+	if current_state in ["RUN", "IN_AIR", "SLIDE"]:
 		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, mouse_delta.x * 0.1, 0.1) 
 	else:
 		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, 0, 0.1)
