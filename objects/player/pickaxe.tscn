@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://objects/player/pickaxe.gd" type="Script" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 0.02, 0.2, 0.05 )
+
+[sub_resource type="CubeMesh" id=2]
+size = Vector3( 0.05, 0.05, 0.2 )
+
+[node name="pickaxe" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0894714, 0.0827985 )
+cast_shadow = 0
+mesh = SubResource( 1 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0718732 )
+cast_shadow = 0
+mesh = SubResource( 2 )

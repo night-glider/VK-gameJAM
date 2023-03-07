@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://objects/player/player.gd" type="Script" id=1]
 [ext_resource path="res://sprites/cloud.png" type="Texture" id=2]
+[ext_resource path="res://objects/player/pickaxe.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.25
@@ -34,6 +35,15 @@ shape = SubResource( 1 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0 )
 current = true
 
+[node name="RayCast" type="RayCast" parent="Camera"]
+enabled = true
+cast_to = Vector3( 0, 0, -1 )
+debug_shape_custom_color = Color( 1, 0, 0, 1 )
+
+[node name="pickaxe" parent="Camera" instance=ExtResource( 3 )]
+unique_name_in_owner = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.110566, -0.127649, -0.239415 )
+
 [node name="Label" type="Label" parent="."]
 anchor_left = 1.0
 anchor_top = 1.0
@@ -46,7 +56,7 @@ grow_vertical = 0
 text = "test value"
 align = 2
 
-[node name="Particles" type="CPUParticles" parent="."]
+[node name="run_particles" type="CPUParticles" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0 )
 cast_shadow = 0
 emitting = false
@@ -61,3 +71,33 @@ initial_velocity = 0.1
 initial_velocity_random = 1.0
 scale_amount = 1.5
 color_ramp = SubResource( 9 )
+
+[node name="jump_particles" type="CPUParticles" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0 )
+cast_shadow = 0
+emitting = false
+one_shot = true
+explosiveness = 1.0
+local_coords = false
+mesh = SubResource( 8 )
+spread = 180.0
+flatness = 0.8
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 1.0
+initial_velocity_random = 0.5
+damping = 0.5
+scale_amount = 1.5
+color_ramp = SubResource( 9 )
+
+[node name="aim" type="ReferenceRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -5.0
+margin_top = -5.0
+margin_right = 5.0
+margin_bottom = 5.0
+border_color = Color( 1, 1, 1, 1 )
+border_width = 5.0
+editor_only = false
