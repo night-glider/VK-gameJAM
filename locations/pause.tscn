@@ -122,6 +122,33 @@ double_sided = false
 alpha_cut = 1
 text = "Звук:"
 
+[node name="sens" type="Spatial" parent="."]
+transform = Transform( 0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, -1.36072, 0, -1.82616 )
+
+[node name="Label" type="Label3D" parent="sens"]
+pixel_size = 0.02
+double_sided = false
+alpha_cut = 1
+text = "10"
+
+[node name="sens_up" parent="sens" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.04, 0 )
+text = ">"
+hitbox_scale = Vector3( 0.5, 1, 1 )
+
+[node name="sens_down" parent="sens" instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.04, 0 )
+text = "<"
+hitbox_scale = Vector3( 0.5, 1, 1 )
+
+[node name="Label3D" type="Label3D" parent="sens"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0, 0 )
+cast_shadow = 0
+double_sided = false
+alpha_cut = 1
+text = "Чувствительность
+мыши"
+
 [node name="exit" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.586015, -2 )
 text = "Выход"
@@ -134,4 +161,6 @@ hitbox_scale = Vector3( 2, 1, 1 )
 [connection signal="pressed" from="music/music_down" to="." method="_on_music_down_pressed"]
 [connection signal="pressed" from="sound/sound_up" to="." method="_on_sound_up_pressed"]
 [connection signal="pressed" from="sound/sound_down" to="." method="_on_sound_down_pressed"]
+[connection signal="pressed" from="sens/sens_up" to="." method="_on_sens_up_pressed"]
+[connection signal="pressed" from="sens/sens_down" to="." method="_on_sens_down_pressed"]
 [connection signal="pressed" from="exit" to="." method="_on_exit_pressed"]

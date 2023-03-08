@@ -183,8 +183,8 @@ func _process(delta):
 	if current_state != "SLIDE":
 		pickaxe.rotation_degrees.z = lerp(pickaxe.rotation_degrees.z, 0, 0.1)
 	
-	rotation_degrees.y -= mouse_delta.x * 0.1
-	$Camera.rotation_degrees.x -= mouse_delta.y * 0.1
+	rotation_degrees.y -= mouse_delta.x * Globals.sensitivity * 0.02
+	$Camera.rotation_degrees.x -= mouse_delta.y * Globals.sensitivity * 0.02
 	$Camera.rotation_degrees.x = clamp($Camera.rotation_degrees.x, -90, 90)
 	
 	

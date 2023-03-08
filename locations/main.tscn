@@ -170,7 +170,7 @@ cast_shadow = 0
 pixel_size = 0.02
 double_sided = false
 alpha_cut = 1
-text = "Ctrl - подкат
+text = "Ctrl / C - подкат
 Прыжок из подката  
 дальше обычного"
 

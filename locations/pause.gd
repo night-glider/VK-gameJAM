@@ -8,6 +8,7 @@ onready var master_volume = SaveManager.get_var("master", 10)
 onready var sound_volume = SaveManager.get_var("sound", 10)
 onready var music_volume = SaveManager.get_var("music", 10)
 
+
 func toggle_pause():
 	$Camera.current = not $Camera.current
 	visible = $Camera.current
@@ -21,6 +22,7 @@ func _ready():
 	$master/Label.text = str(master_volume)
 	$music/Label.text = str(music_volume)
 	$sound/Label.text = str(sound_volume)
+	$sens/Label.text = str(Globals.sensitivity)
 	
 	visible = false
 	$Camera/crosshair.visible = visible
@@ -41,8 +43,8 @@ func _process(delta):
 			obj.press()
 	
 	
-	$Camera.rotation_degrees.y -= mouse_delta.x * 0.1
-	$Camera.rotation_degrees.x -= mouse_delta.y * 0.1
+	$Camera.rotation_degrees.y -= mouse_delta.x * Globals.sensitivity * 0.02
+	$Camera.rotation_degrees.x -= mouse_delta.y * Globals.sensitivity * 0.02
 	$Camera.rotation_degrees.x = clamp($Camera.rotation_degrees.x, -90, 90)
 	
 	mouse_delta = Vector2.ZERO
@@ -90,6 +92,17 @@ func _on_sound_down_pressed():
 	Globals.change_bus_volume("Sound", sound_volume)
 	$sound/Label.text = str(sound_volume)
 
-
 func _on_exit_pressed():
 	get_tree().quit()
+
+
+func _on_sens_up_pressed():
+	Globals.sensitivity = clamp(Globals.sensitivity + 1, 1, 10)
+	SaveManager.set_var("sensitivity", Globals.sensitivity)
+	$sens/Label.text = str(Globals.sensitivity)
+
+
+func _on_sens_down_pressed():
+	Globals.sensitivity = clamp(Globals.sensitivity - 1, 1, 10)
+	SaveManager.set_var("sensitivity", Globals.sensitivity)
+	$sens/Label.text = str(Globals.sensitivity)
