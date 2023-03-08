@@ -1,6 +1,7 @@
 extends KinematicBody
 
 onready var pickaxe = $"%pickaxe"
+const pick_sound = preload("res://sounds/test_sound.ogg")
 
 var mouse_delta := Vector2.ZERO
 
@@ -97,6 +98,7 @@ func in_air_state():
 			pickaxe.global_transform = prev_transform
 			pickaxe.pick_point(pick_point)
 			current_state = "PICKED"
+			Globals.play_sound(pick_sound)
 
 func slide_state():
 	var current_direction = Vector3(velocity.x, 0, velocity.z).normalized()
@@ -133,13 +135,11 @@ func picked_state():
 	
 	if Input.is_action_pressed("jump"):
 		$Camera.translation = lerp($Camera.translation, $Camera.transform.basis.z *0.25, 0.1)
-	
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _physics_process(delta):
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#обнуление необходимых переменных
 	snap = Vector3.DOWN
 	input = Vector3.ZERO
@@ -168,6 +168,8 @@ func _physics_process(delta):
 	move_and_slide_with_snap(velocity, snap, Vector3.UP, true)
 
 func _process(delta):
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
 	if $Camera/RayCast.is_colliding():
 		$aim.visible = true
 	else:

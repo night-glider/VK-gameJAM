@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://sprites/cat.png" type="Texture" id=1]
 [ext_resource path="res://locations/main.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://objects/player/player.tscn" type="PackedScene" id=5]
 [ext_resource path="res://maps/test/town_test_blnd.obj" type="ArrayMesh" id=6]
 [ext_resource path="res://maps/test/small_panel_final.tga" type="Texture" id=7]
+[ext_resource path="res://locations/pause.tscn" type="PackedScene" id=8]
 
 [sub_resource type="Animation" id=2]
 length = 0.001
@@ -93,37 +94,6 @@ texture = ExtResource( 1 )
 anims/RESET = SubResource( 2 )
 anims/default = SubResource( 1 )
 
-[node name="Panel" type="Panel" parent="."]
-anchor_right = 0.2
-anchor_bottom = 0.3
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 5.0
-margin_top = 5.0
-margin_right = -5.0
-margin_bottom = -5.0
-
-[node name="Button" type="Button" parent="Panel/VBoxContainer"]
-margin_right = 94.0
-margin_bottom = 36.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "Я КНОПКА"
-
-[node name="HSlider" type="HSlider" parent="Panel/VBoxContainer"]
-margin_top = 40.0
-margin_right = 194.0
-margin_bottom = 72.0
-max_value = 10.0
-
-[node name="LineEdit" type="LineEdit" parent="Panel/VBoxContainer"]
-margin_top = 76.0
-margin_right = 194.0
-margin_bottom = 122.0
-text = "вводить сюда"
-
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( 0.965926, -0.183013, 0.183013, 0, 0.707107, 0.707107, -0.258819, -0.683013, 0.683013, 0, 23, 0 )
 light_energy = 0.5
@@ -186,6 +156,14 @@ double_sided = false
 alpha_cut = 1
 text = "Пробел - прыжок"
 
+[node name="Label3D8" type="Label3D" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2, -2, -3 )
+cast_shadow = 0
+pixel_size = 0.02
+double_sided = false
+alpha_cut = 1
+text = "P - пауза"
+
 [node name="Label3D4" type="Label3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.179113, 0, -7.62117 )
 cast_shadow = 0
@@ -216,3 +194,6 @@ visible = false
 
 [node name="CollisionShape" type="CollisionShape" parent="town_test_blnd/StaticBody"]
 shape = SubResource( 6 )
+
+[node name="Spatial" parent="." instance=ExtResource( 8 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0 )
