@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://objects/plane.gd" type="Script" id=1]
+
+[sub_resource type="QuadMesh" id=1]
+center_offset = Vector3( 0.5, 0.5, 0 )
+
+[node name="plane" type="MeshInstance"]
+cast_shadow = 0
+mesh = SubResource( 1 )
+script = ExtResource( 1 )
