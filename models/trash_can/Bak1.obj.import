@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Bak1.obj-f08e61bfd86414f5933afab10a554a0c.mesh"
+
+[deps]
+
+files=[ "res://.import/Bak1.obj-f08e61bfd86414f5933afab10a554a0c.mesh" ]
+
+source_file="res://models/trash_can/Bak1.obj"
+dest_files=[ "res://.import/Bak1.obj-f08e61bfd86414f5933afab10a554a0c.mesh", "res://.import/Bak1.obj-f08e61bfd86414f5933afab10a554a0c.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 0.007, 0.007, 0.007 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

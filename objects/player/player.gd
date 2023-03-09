@@ -14,6 +14,8 @@ var snap := Vector3.DOWN
 var input := Vector3.ZERO
 var speed := run_speed
 var pick_point := Vector3.ZERO
+var has_pickaxe := true
+var pickaxe_throwed := false
 
 
 var states := {
@@ -34,6 +36,24 @@ var states := {
 	}
 }
 var current_state := "IDLE"
+
+func remove_pickaxe():
+	var prev_transform = pickaxe.global_transform
+	$Camera.remove_child(pickaxe)
+	get_parent().add_child(pickaxe)
+	pickaxe.global_transform = prev_transform
+	
+	has_pickaxe = false
+
+func restore_pickaxe():
+	var prev_transform = pickaxe.global_transform
+	pickaxe.reset()
+	pickaxe.get_parent().remove_child(pickaxe)
+	$Camera.add_child(pickaxe)
+	pickaxe.translation = Vector3(0.111, -0.088, -0.278)
+	pickaxe.rotation = Vector3.ZERO
+	
+	has_pickaxe = true
 
 func print_stats():
 	var result = "Состояние: {0}\nСкорость: {1}\nНа полу: {2}"
@@ -80,22 +100,14 @@ func in_air_state():
 	velocity.x = lerp(velocity.x, velocity_target.x, 0.05)
 	velocity.z = lerp(velocity.z, velocity_target.z, 0.05)
 	
-	if velocity.y < -3:
-		$Camera.h_offset = lerp($Camera.h_offset,randf() * velocity.y * 0.002,0.5)
-		$Camera.v_offset = lerp($Camera.v_offset,randf() * velocity.y * 0.002,0.5)
-	else:
-		$Camera.h_offset = 0
-		$Camera.v_offset = 0
-	
+	if not has_pickaxe:
+		return
 	if Input.is_action_just_pressed("pick"):
 		if $Camera/RayCast.is_colliding():
 			print($Camera/RayCast.get_collision_normal())
 			pick_point = $Camera/RayCast.get_collision_point()
 			print(pick_point)
-			var prev_transform = pickaxe.global_transform
-			$Camera.remove_child(pickaxe)
-			get_parent().add_child(pickaxe)
-			pickaxe.global_transform = prev_transform
+			remove_pickaxe()
 			pickaxe.pick_point(pick_point)
 			current_state = "PICKED"
 			Globals.play_sound(pick_sound)
@@ -125,19 +137,50 @@ func picked_state():
 	if Input.is_action_just_released("jump"):
 		velocity = -$Camera.global_transform.basis.z * pick_jump_force
 		current_state = "IN_AIR"
-		var prev_transform = pickaxe.global_transform
-		pickaxe.reset()
-		pickaxe.get_parent().remove_child(pickaxe)
-		$Camera.add_child(pickaxe)
-		pickaxe.translation = Vector3(0.111, -0.088, -0.278)
-		pickaxe.rotation = Vector3.ZERO
+		restore_pickaxe()
 		$Camera.translation = Vector3(0,0.25,0)
 	
 	if Input.is_action_pressed("jump"):
 		$Camera.translation = lerp($Camera.translation, $Camera.transform.basis.z *0.25, 0.1)
 
+func camera_animations():
+	rotation_degrees.y -= mouse_delta.x * Globals.sensitivity * 0.02
+	$Camera.rotation_degrees.x -= mouse_delta.y * Globals.sensitivity * 0.02
+	$Camera.rotation_degrees.x = clamp($Camera.rotation_degrees.x, -90, 90)
+	
+	if current_state in ["RUN", "IN_AIR", "SLIDE"]:
+		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, mouse_delta.x * 0.1, 0.1) 
+	else:
+		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, 0, 0.1)
+	
+	if current_state == "SLIDE":
+		$Camera.translation.y = lerp($Camera.translation.y, -0.25, 0.1)
+		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, -10, 0.1)
+	else:
+		$Camera.translation.y = lerp($Camera.translation.y, 0.25, 0.1)
+		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, 0, 0.1)
+	
+	if velocity.y < -3:
+		$Camera.h_offset = lerp($Camera.h_offset,randf() * velocity.y * 0.002,0.5)
+		$Camera.v_offset = lerp($Camera.v_offset,randf() * velocity.y * 0.002,0.5)
+	else:
+		$Camera.h_offset = lerp($Camera.h_offset, 0, 0.1)
+		$Camera.v_offset = lerp($Camera.v_offset, 0, 0.1)
+	
+	if current_state != "PICKED" and has_pickaxe and Input.is_action_pressed("aim"):
+		$Camera.fov = lerp($Camera.fov, 50, 0.05)
+	else:
+		if current_state == "SLIDE":
+			$Camera.fov = lerp($Camera.fov, 85, 0.1)
+		else:
+			$Camera.fov = lerp($Camera.fov, 70, 0.1)
+	
+	mouse_delta = Vector2.ZERO
+
+
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	pickaxe.owner_obj = self
 
 func _physics_process(delta):
 	#обнуление необходимых переменных
@@ -169,40 +212,50 @@ func _physics_process(delta):
 
 func _process(delta):
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	camera_animations()
 	
 	if $Camera/RayCast.is_colliding():
 		$aim.visible = true
 	else:
 		$aim.visible = false
 	
+	if pickaxe.state == pickaxe.THROW_AT_OBJECT:
+		var dist = global_transform.origin.distance_to( pickaxe.global_transform.origin )
+		if dist < 1:
+			restore_pickaxe()
+			pickaxe.reset()
+			has_pickaxe = true
+			pickaxe_throwed = false
+	
+	if pickaxe_throwed:
+		if Input.is_action_just_pressed("pick"):
+			pickaxe.throw_at_owner()
+	
+	if current_state != "PICKED" and has_pickaxe:
+		if Input.is_action_pressed("aim"):
+			$aim.visible = true
+			if Input.is_action_just_pressed("pick"):
+				remove_pickaxe()
+				pickaxe.throw_velocity(-$Camera.global_transform.basis.z*0.2)
+				pickaxe_throwed = true
+	
+	
 	$run_particles.emitting = current_state in ["RUN"]
 	
 	if Input.is_action_just_pressed("restart"):
-		translation = Vector3.ZERO
+		get_tree().reload_current_scene()
 	
 	if current_state != "SLIDE":
 		pickaxe.rotation_degrees.z = lerp(pickaxe.rotation_degrees.z, 0, 0.1)
 	
-	rotation_degrees.y -= mouse_delta.x * Globals.sensitivity * 0.02
-	$Camera.rotation_degrees.x -= mouse_delta.y * Globals.sensitivity * 0.02
-	$Camera.rotation_degrees.x = clamp($Camera.rotation_degrees.x, -90, 90)
 	
 	
-	if current_state in ["RUN", "IN_AIR", "SLIDE"]:
-		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, mouse_delta.x * 0.1, 0.1) 
-	else:
-		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, 0, 0.1)
 	
-	if current_state == "SLIDE":
-		$Camera.translation.y = lerp($Camera.translation.y, -0.25, 0.1)
-		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, -10, 0.1)
-	else:
-		$Camera.translation.y = lerp($Camera.translation.y, 0.25, 0.1)
-		$Camera.rotation_degrees.z = lerp($Camera.rotation_degrees.z, 0, 0.1)
+	
 	
 	$Label.text = print_stats()
 	
-	mouse_delta = Vector2.ZERO
+	
 
 func _input(event: InputEvent):
 	if event is InputEventMouseMotion:

@@ -4,7 +4,7 @@ const active_color = Color.yellow
 const default_color = Color.white
 
 var mouse_delta := Vector2.ZERO
-onready var master_volume = SaveManager.get_var("master", 10)
+onready var master_volume = SaveManager.get_var("master", 5)
 onready var sound_volume = SaveManager.get_var("sound", 10)
 onready var music_volume = SaveManager.get_var("music", 10)
 
