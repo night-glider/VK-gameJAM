@@ -16,6 +16,7 @@ var speed := run_speed
 var pick_point := Vector3.ZERO
 var has_pickaxe := true
 var pickaxe_throwed := false
+var stamina := 1.0
 
 
 var states := {
@@ -79,12 +80,14 @@ func apply_gravity():
 func idle_state():
 	velocity.x = 0
 	velocity.z = 0
+	stamina = 1
 	apply_gravity()
 	if Input.is_action_just_pressed("jump"):
 		velocity.y = jump_force
 		snap = Vector3.ZERO
 
 func run_state():
+	stamina = 1
 	var velocity_target = input * speed
 	velocity.x = velocity_target.x
 	velocity.z = velocity_target.z
@@ -93,7 +96,6 @@ func run_state():
 		velocity.y = jump_force
 		snap = Vector3.ZERO
 
-
 func in_air_state():
 	apply_gravity()
 	var velocity_target = input * speed
@@ -101,6 +103,8 @@ func in_air_state():
 	velocity.z = lerp(velocity.z, velocity_target.z, 0.05)
 	
 	if not has_pickaxe:
+		return
+	if stamina <= 0:
 		return
 	if Input.is_action_just_pressed("pick"):
 		if $Camera/RayCast.is_colliding():
@@ -111,6 +115,7 @@ func in_air_state():
 			pickaxe.pick_point(pick_point)
 			current_state = "PICKED"
 			Globals.play_sound(pick_sound)
+			stamina -= 0.34
 
 func slide_state():
 	var current_direction = Vector3(velocity.x, 0, velocity.z).normalized()
@@ -249,13 +254,9 @@ func _process(delta):
 		pickaxe.rotation_degrees.z = lerp(pickaxe.rotation_degrees.z, 0, 0.1)
 	
 	
-	
-	
-	
-	
+	$stamina_bar.value = lerp($stamina_bar.value, stamina, 0.1)
 	$Label.text = print_stats()
-	
-	
+
 
 func _input(event: InputEvent):
 	if event is InputEventMouseMotion:

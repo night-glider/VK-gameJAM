@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://objects/player/player.gd" type="Script" id=1]
 [ext_resource path="res://sprites/cloud.png" type="Texture" id=2]
@@ -24,6 +24,22 @@ size = Vector2( 0.1, 0.1 )
 offsets = PoolRealArray( 0.822695, 1 )
 colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
 
+[sub_resource type="Gradient" id=11]
+offsets = PoolRealArray( 0.533835 )
+colors = PoolColorArray( 0.274796, 0.323074, 0.339844, 1 )
+
+[sub_resource type="GradientTexture" id=12]
+gradient = SubResource( 11 )
+width = 10
+
+[sub_resource type="Gradient" id=13]
+offsets = PoolRealArray( 0.661654 )
+colors = PoolColorArray( 0.164063, 0.725708, 1, 1 )
+
+[sub_resource type="GradientTexture" id=14]
+gradient = SubResource( 13 )
+width = 10
+
 [node name="player" type="KinematicBody" groups=["player"]]
 script = ExtResource( 1 )
 
@@ -43,18 +59,6 @@ debug_shape_custom_color = Color( 1, 0, 0, 1 )
 [node name="pickaxe" parent="Camera" instance=ExtResource( 3 )]
 unique_name_in_owner = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.110566, -0.08839, -0.277708 )
-
-[node name="Label" type="Label" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_right = -5.0
-margin_bottom = -5.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "test value"
-align = 2
 
 [node name="run_particles" type="CPUParticles" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0 )
@@ -89,6 +93,20 @@ damping = 0.5
 scale_amount = 1.5
 color_ramp = SubResource( 9 )
 
+[node name="Label" type="Label" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -89.0
+margin_top = -25.0
+margin_right = -5.0
+margin_bottom = -5.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "test value"
+align = 2
+
 [node name="aim" type="ReferenceRect" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
@@ -101,3 +119,19 @@ margin_bottom = 5.0
 border_color = Color( 1, 1, 1, 1 )
 border_width = 5.0
 editor_only = false
+
+[node name="stamina_bar" type="TextureProgress" parent="."]
+anchor_left = 0.4
+anchor_top = 1.0
+anchor_right = 0.6
+anchor_bottom = 1.0
+margin_top = -10.0
+margin_bottom = -5.0
+min_value = 0.05
+max_value = 0.95
+step = 0.01
+value = 0.5
+texture_under = SubResource( 12 )
+texture_progress = SubResource( 14 )
+fill_mode = 6
+nine_patch_stretch = true
