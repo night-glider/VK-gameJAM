@@ -43,6 +43,7 @@ func _process(delta):
 		global_transform.origin = lerp(global_transform.origin, point_to_pick, 0.1)
 	
 	if state == THROW_VELOCITY:
+		throw_velocity.y -= 0.001
 		global_transform.origin += throw_velocity
 	
 	if state == THROW_AT_OBJECT:
