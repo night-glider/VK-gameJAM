@@ -6,6 +6,7 @@
 extents = Vector3( 0.25, 0.25, 0.25 )
 
 [node name="button" type="Area" groups=["button3D"]]
+monitoring = false
 script = ExtResource( 1 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]

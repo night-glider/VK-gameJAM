@@ -17,6 +17,7 @@ func toggle_pause():
 	SaveManager.save_to_disk()
 
 func _ready():
+	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	$master/Label.text = str(master_volume)

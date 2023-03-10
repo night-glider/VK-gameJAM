@@ -1,15 +1,18 @@
 extends KinematicBody
 
+signal died
+
+export var run_speed := 3.0
+export var jump_force := 3.0
+export var pick_jump_force = 6.0
+
 onready var pickaxe = $"%pickaxe"
 const pick_sound = preload("res://sounds/test_sound.ogg")
 
+
 var mouse_delta := Vector2.ZERO
-
-var run_speed := 3.0
-var jump_force := 3.0
-var pick_jump_force = 6.0
-
 var velocity := Vector3.ZERO
+var knockback := Vector3.ZERO
 var snap := Vector3.DOWN
 var input := Vector3.ZERO
 var speed := run_speed
@@ -37,6 +40,12 @@ var states := {
 	}
 }
 var current_state := "IDLE"
+
+func apply_knockback(vel:Vector3):
+	if current_state == "PICKED":
+		restore_pickaxe()
+		pickaxe.reset()
+	knockback = vel
 
 func remove_pickaxe():
 	var prev_transform = pickaxe.global_transform
@@ -82,7 +91,7 @@ func idle_state():
 	velocity.z = 0
 	stamina = 1
 	apply_gravity()
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_pressed("jump"):
 		velocity.y = jump_force
 		snap = Vector3.ZERO
 
@@ -92,7 +101,7 @@ func run_state():
 	velocity.x = velocity_target.x
 	velocity.z = velocity_target.z
 	apply_gravity()
-	if Input.is_action_just_pressed("jump"):
+	if Input.is_action_pressed("jump"):
 		velocity.y = jump_force
 		snap = Vector3.ZERO
 
@@ -106,11 +115,9 @@ func in_air_state():
 		return
 	if stamina <= 0:
 		return
-	if Input.is_action_just_pressed("pick"):
+	if Input.is_action_pressed("pick"):
 		if $Camera/RayCast.is_colliding():
-			print($Camera/RayCast.get_collision_normal())
 			pick_point = $Camera/RayCast.get_collision_point()
-			print(pick_point)
 			remove_pickaxe()
 			pickaxe.pick_point(pick_point)
 			current_state = "PICKED"
@@ -182,6 +189,17 @@ func camera_animations():
 	
 	mouse_delta = Vector2.ZERO
 
+func gui_3D_process():
+	if $Camera/RayCastGUI.is_colliding():
+		var obj:Node = $Camera/RayCastGUI.get_collider()
+		if obj.is_in_group("button3D"):
+			obj.hovered = true
+			if Input.is_action_just_pressed("pick"):
+				obj.press()
+
+func death_process():
+	if global_transform.origin.y < -15:
+		get_tree().reload_current_scene()
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -205,28 +223,34 @@ func _physics_process(delta):
 	
 	var prev_state = current_state
 	#определение состояний
+	
 	state_calculate()
 	
 	if prev_state == "IN_AIR" and current_state in ["IDLE", "RUN"]:
 		$jump_particles.emitting = true
 	
 	call(states[current_state]["func"])
-
-	
+	if knockback != Vector3.ZERO:
+		snap = Vector3.ZERO
+		velocity += knockback
+		knockback = Vector3.ZERO
 	move_and_slide_with_snap(velocity, snap, Vector3.UP, true)
 
 func _process(delta):
+	$aim.visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera_animations()
+	gui_3D_process()
+	death_process()
 	
 	if $Camera/RayCast.is_colliding():
 		$aim.visible = true
-	else:
-		$aim.visible = false
 	
 	if pickaxe.state == pickaxe.THROW_AT_OBJECT:
 		var dist = global_transform.origin.distance_to( pickaxe.global_transform.origin )
 		if dist < 1:
+			var knock = pickaxe.global_transform.origin.direction_to(global_transform.origin)
+			apply_knockback(knock + Vector3.UP)
 			restore_pickaxe()
 			pickaxe.reset()
 			has_pickaxe = true
@@ -247,8 +271,6 @@ func _process(delta):
 	
 	$run_particles.emitting = current_state in ["RUN"]
 	
-	if Input.is_action_just_pressed("restart"):
-		get_tree().reload_current_scene()
 	
 	if Input.is_action_just_pressed("fullscreen"):
 		OS.window_fullscreen = !OS.window_fullscreen
@@ -264,4 +286,3 @@ func _process(delta):
 func _input(event: InputEvent):
 	if event is InputEventMouseMotion:
 		mouse_delta = event.relative
-

@@ -1,16 +1,41 @@
 extends Spatial
 
-const enemy = preload("res://objects/enemy.tscn")
+var score_to_win:int = 10
+
+var race_leaderboard = [
+	{"nick":"nighty", "value":0.2},
+	{"nick":"wuxhiff", "value":0.1},
+	{"nick":"glkppr", "value":0.3}
+]
+
+func sort_leaderboard(a, b):
+	if a["value"] < b["value"]:
+		return false
+	else:
+		return true
 
 func _ready():
-	randomize()
-	$AnimationPlayer.play("default")
+	var race_record = SaveManager.get_var("race_record", 0)
+	race_leaderboard.append({"nick":"Я", "value":race_record})
+	race_leaderboard.sort_custom(self, "sort_leaderboard")
+	
+	for elem in race_leaderboard:
+		var result = ""
+		for i in 10:
+			if i > (len(elem["nick"])-1 ):
+				result+= " "
+			else:
+				result+= elem["nick"][i]
+		result += " " + str(elem["value"]) + "\n"
+		$leaderboard/table.text += result
 
+func _on_score_down_pressed():
+	score_to_win = clamp(score_to_win -1, 5, 20)
+	$mode1/score.text = str(score_to_win)
 
-func _on_enemy_destroyed():
-	var spawn_locations:Array = $enemy_spawns.get_children()
-	var pos = spawn_locations[randi() % spawn_locations.size()].get_random_point()
-	var new_enemy = enemy.instance()
-	new_enemy.connect("destroyed", self, "_on_enemy_destroyed")
-	add_child(new_enemy)
-	new_enemy.global_transform.origin = pos
+func _on_score_up_pressed():
+	score_to_win = clamp(score_to_win +1, 5, 20)
+	$mode1/score.text = str(score_to_win)
+
+func _on_mode1_start_pressed():
+	get_tree().change_scene("res://locations/gray_city.tscn")
