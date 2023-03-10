@@ -250,6 +250,9 @@ func _process(delta):
 	if Input.is_action_just_pressed("restart"):
 		get_tree().reload_current_scene()
 	
+	if Input.is_action_just_pressed("fullscreen"):
+		OS.window_fullscreen = !OS.window_fullscreen
+	
 	if current_state != "SLIDE":
 		pickaxe.rotation_degrees.z = lerp(pickaxe.rotation_degrees.z, 0, 0.1)
 	
