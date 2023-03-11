@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/spavn.obj-78fb2d40f9ce8477be13a83b4ad7b579.mesh"
+
+[deps]
+
+files=[ "res://.import/spavn.obj-78fb2d40f9ce8477be13a83b4ad7b579.mesh" ]
+
+source_file="res://maps/hub/spavn.obj"
+dest_files=[ "res://.import/spavn.obj-78fb2d40f9ce8477be13a83b4ad7b579.mesh", "res://.import/spavn.obj-78fb2d40f9ce8477be13a83b4ad7b579.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 7, 7, 7 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/big_town.obj-5808f591a110e9fe67b09157d7fb0bde.mesh"
+
+[deps]
+
+files=[ "res://.import/big_town.obj-5808f591a110e9fe67b09157d7fb0bde.mesh" ]
+
+source_file="res://maps/gray_town_2/big_town.obj"
+dest_files=[ "res://.import/big_town.obj-5808f591a110e9fe67b09157d7fb0bde.mesh", "res://.import/big_town.obj-5808f591a110e9fe67b09157d7fb0bde.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 0.05, 0.05, 0.05 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286

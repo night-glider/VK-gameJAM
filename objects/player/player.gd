@@ -48,18 +48,19 @@ func apply_knockback(vel:Vector3):
 	knockback = vel
 
 func remove_pickaxe():
-	var prev_transform = pickaxe.global_transform
-	$Camera.remove_child(pickaxe)
-	get_parent().add_child(pickaxe)
-	pickaxe.global_transform = prev_transform
+	pickaxe.reparent(get_parent())
+	
+	has_pickaxe = false
+
+func remove_pickaxe_obj(obj:Spatial):
+	pickaxe.reparent(obj)
 	
 	has_pickaxe = false
 
 func restore_pickaxe():
-	var prev_transform = pickaxe.global_transform
 	pickaxe.reset()
-	pickaxe.get_parent().remove_child(pickaxe)
-	$Camera.add_child(pickaxe)
+	pickaxe.reparent($Camera)
+	
 	pickaxe.translation = Vector3(0.111, -0.088, -0.278)
 	pickaxe.rotation = Vector3.ZERO
 	
@@ -118,7 +119,9 @@ func in_air_state():
 	if Input.is_action_pressed("pick"):
 		if $Camera/RayCast.is_colliding():
 			pick_point = $Camera/RayCast.get_collision_point()
-			remove_pickaxe()
+			var pick_object = $Camera/RayCast.get_collider()
+			#remove_pickaxe()
+			remove_pickaxe_obj(pick_object)
 			pickaxe.pick_point(pick_point)
 			current_state = "PICKED"
 			Globals.play_sound(pick_sound)
@@ -144,7 +147,8 @@ func slide_state():
 		velocity.z *= 3
 
 func picked_state():
-	velocity = global_transform.origin.direction_to(pick_point)
+	#velocity = global_transform.origin.direction_to(pick_point)
+	velocity = global_transform.origin.direction_to(pickaxe.global_transform.origin) * 2
 	
 	if Input.is_action_just_released("jump"):
 		velocity = -$Camera.global_transform.basis.z * pick_jump_force

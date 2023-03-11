@@ -15,6 +15,9 @@ func sort_leaderboard(a, b):
 		return true
 
 func _ready():
+	if SaveManager.get_var("tutorial_completed", false):
+		$player.rotation_degrees = Vector3.ZERO
+	
 	var race_record = SaveManager.get_var("race_record", 0)
 	race_leaderboard.append({"nick":"Я", "value":race_record})
 	race_leaderboard.sort_custom(self, "sort_leaderboard")
@@ -31,11 +34,16 @@ func _ready():
 
 func _on_score_down_pressed():
 	score_to_win = clamp(score_to_win -1, 5, 20)
-	$mode1/score.text = str(score_to_win)
+	$race_mode/score.text = str(score_to_win)
 
 func _on_score_up_pressed():
 	score_to_win = clamp(score_to_win +1, 5, 20)
-	$mode1/score.text = str(score_to_win)
+	$race_mode/score.text = str(score_to_win)
 
 func _on_mode1_start_pressed():
 	get_tree().change_scene("res://locations/gray_city.tscn")
+
+
+func _on_enemy_destroyed():
+	SaveManager.set_var("tutorial_completed", true)
+	SaveManager.save_to_disk()
