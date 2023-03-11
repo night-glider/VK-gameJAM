@@ -26,7 +26,6 @@ func throw_velocity(vel:Vector3):
 	$Area.monitoring = true
 
 func throw_at_owner():
-	reset()
 	change_rotation(0.25)
 	state = THROW_AT_OBJECT
 

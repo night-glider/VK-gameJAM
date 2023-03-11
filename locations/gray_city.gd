@@ -1,21 +1,16 @@
 extends Spatial
 
-const enemy = preload("res://objects/enemy.tscn")
-const turret = preload("res://objects/turret.tscn")
+
 onready var point_cast := $PointCast 
 var bounding_box:AABB
+onready var player_obj := $player
 
 func _ready():
 	bounding_box = $city.get_aabb()
-	
-	for i in 10:
-		var new_turret = turret.instance()
-		add_child(new_turret)
-		new_turret.init($player)
-		new_turret.global_translation = get_random_point_up() + Vector3(0,3,0)
+	apply_game_mode()
 
-func _process(delta):
-	$"moving platform".translation.z += 0.025
+func apply_game_mode():
+	add_child(Globals.current_mode)
 
 func get_random_point_up():
 	point_cast.cast_to = Vector3(0,-200, 0)
@@ -39,8 +34,4 @@ func get_random_point_side():
 		if point_cast.is_colliding():
 			return point_cast.get_collision_point()
 
-func _on_enemy_destroyed():
-	var new_enemy = enemy.instance()
-	add_child(new_enemy)
-	new_enemy.global_transform.origin = get_random_point_up()
-	new_enemy.connect("destroyed", self, "_on_enemy_destroyed")
+

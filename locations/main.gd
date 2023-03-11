@@ -1,6 +1,9 @@
 extends Spatial
 
-var score_to_win:int = 10
+const race = preload("res://objects/game_modes/race.tscn")
+
+var score_to_win:int = 1000
+var turret_count:int = 10
 
 var race_leaderboard = [
 	{"nick":"nighty", "value":0.2},
@@ -19,6 +22,7 @@ func _ready():
 		$player.rotation_degrees = Vector3.ZERO
 	
 	var race_record = SaveManager.get_var("race_record", 0)
+	race_record = stepify(race_record, 0.01)
 	race_leaderboard.append({"nick":"Я", "value":race_record})
 	race_leaderboard.sort_custom(self, "sort_leaderboard")
 	
@@ -33,17 +37,29 @@ func _ready():
 		$leaderboard/table.text += result
 
 func _on_score_down_pressed():
-	score_to_win = clamp(score_to_win -1, 5, 20)
+	score_to_win = clamp(score_to_win - 100, 500, 2000)
 	$race_mode/score.text = str(score_to_win)
 
 func _on_score_up_pressed():
-	score_to_win = clamp(score_to_win +1, 5, 20)
+	score_to_win = clamp(score_to_win + 100, 500, 2000)
 	$race_mode/score.text = str(score_to_win)
 
 func _on_mode1_start_pressed():
+	var new_race = race.instance()
+	new_race.score_to_win = self.score_to_win
+	new_race.turret_count = self.turret_count
+	Globals.current_mode = new_race
 	get_tree().change_scene("res://locations/gray_city.tscn")
 
 
 func _on_enemy_destroyed():
 	SaveManager.set_var("tutorial_completed", true)
 	SaveManager.save_to_disk()
+
+func _on_turret_up_pressed():
+	turret_count = clamp(turret_count + 1, 0, 30)
+	$race_mode/turret.text = str(turret_count)
+
+func _on_turret_down_pressed():
+	turret_count = clamp(turret_count - 1, 0, 30)
+	$race_mode/turret.text = str(turret_count)

@@ -20,6 +20,7 @@ var pick_point := Vector3.ZERO
 var has_pickaxe := true
 var pickaxe_throwed := false
 var stamina := 1.0
+var respawn_point:= Vector3(0,25,0)
 
 
 var states := {
@@ -45,6 +46,7 @@ func apply_knockback(vel:Vector3):
 	if current_state == "PICKED":
 		restore_pickaxe()
 		pickaxe.reset()
+		current_state = "IN_AIR"
 	knockback = vel
 
 func remove_pickaxe():
@@ -203,11 +205,15 @@ func gui_3D_process():
 
 func death_process():
 	if global_transform.origin.y < -15:
-		get_tree().reload_current_scene()
+		restore_pickaxe()
+		pickaxe.reset()
+		current_state = "IN_AIR"
+		translation = respawn_point
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	pickaxe.owner_obj = self
+	respawn_point = translation
 
 func _physics_process(delta):
 	#обнуление необходимых переменных

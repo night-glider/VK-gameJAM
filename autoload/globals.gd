@@ -2,6 +2,7 @@ extends Node
 class_name globals
 
 onready var sensitivity:int = SaveManager.get_var("sensitivity", 5)
+var current_mode:=Spatial
 
 func _ready():
 	var master_volume = SaveManager.get_var("master", 5)
