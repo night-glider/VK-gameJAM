@@ -1,5 +1,5 @@
 # VK-gameJAM
 
-[Trello](https://trello.com/b/u3rdbtgW/vk-gamejam)
+Эта игра была сделана для VK gameJAM
 
-[Веб версия](https://night-glider.github.io/VK-gameJAM/)
+[ИГРАТЬ](https://night-glider.github.io/VK-gameJAM/)
