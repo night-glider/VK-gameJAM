@@ -6,6 +6,7 @@ var track_distance:int = 1000
 var track_pos := Vector3.ZERO
 
 var obj_visible := false
+var active := true
 
 func init(obj):
 	track_object = obj
@@ -26,35 +27,39 @@ func is_obj_visible():
 		return false
 	
 	$head/pointer.visible = true
-	$head/pointer.scale.z = global_translation.distance_to( track_object.global_translation ) + 10
-
 	track_pos = lerp(track_pos, track_object.global_translation + Vector3(0,0.25,0), 0.025)
 	
 	look_at( track_pos, Vector3.UP )
 	return true
 
 func _ready():
-	track_pos = global_translation + Vector3(0,0,-1)
+	track_pos = translation + Vector3(0,0,-1)
 
 func _process(delta):
 	$head/pointer.visible = false
+	if not active:
+		return
 	obj_visible = is_obj_visible()
 	if obj_visible == false:
 		$Timer.stop()
 		return
 	if $Timer.is_stopped():
 		$Timer.start()
-	
 
 func hit():
 	Globals.spawn_particles(global_translation, particles, 1)
-	queue_free()
+	active = false
+	$particles.emitting = true
+	$active_timer.start()
 
 func _on_Timer_timeout():
+	if not active:
+		return
 	if not obj_visible:
 		return
 	var new_explosion = explosion.instance()
 	get_parent().add_child(new_explosion)
+	new_explosion.scale = Vector3(2,2,2)
 	$head/pointer/RayCast.force_raycast_update()
 	if not $head/pointer/RayCast.is_colliding():
 		return
@@ -62,6 +67,11 @@ func _on_Timer_timeout():
 	if new_explosion.global_translation.distance_to(track_object.global_translation) > 2:
 		return
 	var vel = global_translation.direction_to(track_object.global_translation)
-	vel *= 20
+	vel *= 25
 	vel.y = 5
 	track_object.apply_knockback(vel)
+
+
+func _on_active_timer_timeout():
+	$particles.emitting = false
+	active = true

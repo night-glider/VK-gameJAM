@@ -248,7 +248,6 @@ func _physics_process(delta):
 
 func _process(delta):
 	$aim.visible = false
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	camera_animations()
 	gui_3D_process()
 	death_process()
@@ -296,3 +295,5 @@ func _process(delta):
 func _input(event: InputEvent):
 	if event is InputEventMouseMotion:
 		mouse_delta = event.relative
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED

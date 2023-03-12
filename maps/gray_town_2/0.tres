@@ -1,0 +1,8 @@
+[gd_resource type="SpatialMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://maps/test/beton.tga" type="Texture" id=1]
+
+[resource]
+resource_name = "custom/tile_final"
+albedo_texture = ExtResource( 1 )
+uv1_scale = Vector3( 0.05, 0.05, 0.05 )

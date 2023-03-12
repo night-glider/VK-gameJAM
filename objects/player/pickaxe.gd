@@ -60,12 +60,13 @@ func reparent(obj):
 	global_transform = prev_global_transform
 
 func _on_Area_body_entered(body:CollisionObject):
-	if body.is_in_group("player"):
+	if body.is_in_group("player") :
 		return
 	if body.is_in_group("hittable"):
 		body.hit()
 		throw_at_owner()
 		return
-	
+	if state == THROW_AT_OBJECT:
+		return
 	call_deferred("reparent", body)
 	reset()

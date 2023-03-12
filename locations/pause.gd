@@ -12,12 +12,12 @@ onready var music_volume = SaveManager.get_var("music", 10)
 func toggle_pause():
 	$Camera.current = not $Camera.current
 	visible = $Camera.current
+	AudioServer.set_bus_effect_enabled(2, 0, visible)
 	$Camera/crosshair.visible = visible
 	$Camera.rotation = Vector3.ZERO
 	SaveManager.save_to_disk()
 
 func _ready():
-	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
 	$master/Label.text = str(master_volume)
@@ -94,7 +94,8 @@ func _on_sound_down_pressed():
 	$sound/Label.text = str(sound_volume)
 
 func _on_exit_pressed():
-	get_tree().quit()
+	get_tree().change_scene("res://locations/main.tscn")
+
 
 
 func _on_sens_up_pressed():
@@ -107,3 +108,13 @@ func _on_sens_down_pressed():
 	Globals.sensitivity = clamp(Globals.sensitivity - 1, 1, 10)
 	SaveManager.set_var("sensitivity", Globals.sensitivity)
 	$sens/Label.text = str(Globals.sensitivity)
+
+
+func _on_clear_save_pressed():
+	SaveManager.clear_data()
+	SaveManager.save_to_disk()
+	_on_exit_pressed()
+
+
+func _on_pause_tree_exited():
+	AudioServer.set_bus_effect_enabled(2, 0, false)

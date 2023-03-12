@@ -5,7 +5,7 @@ signal pressed
 
 export var default_color := Color.white
 export var active_color := Color.yellow
-export var text := "Button3D" setget set_text
+export(String, MULTILINE) var text := "Button3D" setget set_text
 export var hitbox_scale := Vector3.ONE setget set_hitbox_scale
 export var shaded := false
 var hovered := false

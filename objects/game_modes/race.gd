@@ -30,7 +30,7 @@ func _on_enemy_destroyed():
 	new_enemy.connect("destroyed", self, "_on_enemy_destroyed")
 	
 	score+=100
-	$Label3D.text = "ОЧКОВ: " + str(score)
+	$Label3D.text = "ОЧКИ: " + str(score)
 	
 	if score >= score_to_win:
 		var new_record = max(SaveManager.get_var("race_record", 0), (score / time_passed))

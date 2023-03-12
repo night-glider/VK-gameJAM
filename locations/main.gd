@@ -1,9 +1,10 @@
 extends Spatial
 
 const race = preload("res://objects/game_modes/race.tscn")
+const boss_mode = preload("res://objects/game_modes/boss.tscn")
 
 var score_to_win:int = 1000
-var turret_count:int = 10
+var turret_count:int = 5
 
 var race_leaderboard = [
 	{"nick":"nighty", "value":0.2},
@@ -63,3 +64,9 @@ func _on_turret_up_pressed():
 func _on_turret_down_pressed():
 	turret_count = clamp(turret_count - 1, 0, 30)
 	$race_mode/turret.text = str(turret_count)
+
+
+func _on_boss_start_pressed():
+	var new_boss = boss_mode.instance()
+	Globals.current_mode = new_boss
+	get_tree().change_scene("res://locations/gray_city.tscn")

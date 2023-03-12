@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://objects/turret.gd" type="Script" id=1]
+[ext_resource path="res://objects/boss_turret.gd" type="Script" id=1]
+[ext_resource path="res://objects/particles/enemy_explosion.tscn" type="PackedScene" id=2]
+[ext_resource path="res://sprites/cloud.png" type="Texture" id=3]
 
 [sub_resource type="SphereShape" id=3]
-radius = 0.75
 
 [sub_resource type="SpatialMaterial" id=2]
 flags_unshaded = true
@@ -11,21 +12,31 @@ albedo_color = Color( 1, 0, 0, 1 )
 
 [sub_resource type="SphereMesh" id=1]
 material = SubResource( 2 )
-radius = 0.25
-height = 0.5
 radial_segments = 8
 rings = 8
 
 [sub_resource type="CubeMesh" id=4]
-size = Vector3( 0.1, 0.1, 1 )
+size = Vector3( 0.75, 0.75, 2 )
 
 [sub_resource type="CubeMesh" id=5]
-size = Vector3( 0.01, 0.01, 1 )
+size = Vector3( 0.03, 0.03, 1 )
 
 [sub_resource type="SpatialMaterial" id=6]
 flags_transparent = true
 flags_unshaded = true
 albedo_color = Color( 1, 0, 0, 0.631373 )
+
+[sub_resource type="SpatialMaterial" id=7]
+flags_transparent = true
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_billboard_mode = 1
+params_billboard_keep_scale = true
+albedo_texture = ExtResource( 3 )
+
+[sub_resource type="QuadMesh" id=8]
+material = SubResource( 7 )
+size = Vector2( 0.1, 0.1 )
 
 [node name="turret" type="StaticBody" groups=["hittable"]]
 script = ExtResource( 1 )
@@ -52,7 +63,7 @@ mesh = SubResource( 4 )
 skeleton = NodePath("../..")
 
 [node name="pointer" type="Spatial" parent="head"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 32, 0, 0, 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="head/pointer"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5 )
@@ -66,7 +77,24 @@ exclude_parent = false
 cast_to = Vector3( 0, 0, 3 )
 
 [node name="Timer" type="Timer" parent="."]
-wait_time = 3.0
+wait_time = 5.0
 autostart = true
 
+[node name="active_timer" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
+
+[node name="particles" parent="." instance=ExtResource( 2 )]
+amount = 8
+one_shot = false
+explosiveness = 0.0
+mesh = SubResource( 8 )
+emission_shape = 1
+emission_sphere_radius = 1.0
+direction = Vector3( 0, 1, 0 )
+spread = 0.0
+initial_velocity = 2.0
+scale_amount = 7.0
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="active_timer" to="." method="_on_active_timer_timeout"]

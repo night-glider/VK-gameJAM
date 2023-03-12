@@ -4,9 +4,12 @@ extends Spatial
 onready var point_cast := $PointCast 
 var bounding_box:AABB
 onready var player_obj := $player
+var boss_path:Array
 
 func _ready():
 	bounding_box = $city.get_aabb()
+	for point in $boss_path.get_children():
+		boss_path.append(point.global_translation + Vector3(0, 17, 0))
 	apply_game_mode()
 
 func apply_game_mode():
