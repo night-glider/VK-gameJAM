@@ -68,11 +68,6 @@ func restore_pickaxe():
 	
 	has_pickaxe = true
 
-func print_stats():
-	var result = "Состояние: {0}\nСкорость: {1}\nНа полу: {2}"
-	result = result.format([current_state, stepify(velocity.length(), 0.1), is_on_floor()])
-	return result
-
 func state_calculate():
 	if current_state != "PICKED":
 		current_state = "IDLE"
@@ -151,6 +146,7 @@ func slide_state():
 func picked_state():
 	#velocity = global_transform.origin.direction_to(pick_point)
 	velocity = global_transform.origin.direction_to(pickaxe.global_transform.origin) * 2
+	
 	
 	if Input.is_action_just_released("jump"):
 		velocity = -$Camera.global_transform.basis.z * pick_jump_force
@@ -232,12 +228,15 @@ func _physics_process(delta):
 	input = input.normalized()
 	
 	var prev_state = current_state
+	var prev_velocity = velocity
 	#определение состояний
 	
 	state_calculate()
 	
-	if prev_state == "IN_AIR" and current_state in ["IDLE", "RUN"]:
+	if prev_state == "IN_AIR" and current_state in ["IDLE", "RUN"] and prev_velocity.y < -6:
 		$jump_particles.emitting = true
+		$fall_sound.pitch_scale = clamp(2.3 + 0.2*prev_velocity.y,0.3, 1)
+		$fall_sound.play()
 	
 	call(states[current_state]["func"])
 	if knockback != Vector3.ZERO:
@@ -289,7 +288,6 @@ func _process(delta):
 	
 	
 	$stamina_bar.value = lerp($stamina_bar.value, stamina, 0.1)
-	$Label.text = print_stats()
 
 
 func _input(event: InputEvent):

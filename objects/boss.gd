@@ -1,7 +1,7 @@
 extends KinematicBody
 
 signal destroyed
-
+const mine = preload("res://objects/mine.tscn")
 const explosion = preload("res://objects/turret_explosion.tscn")
 var target_obj := Spatial
 var active = false
@@ -11,13 +11,19 @@ var hp := 3
 
 func init(obj, path):
 	target_obj = obj
-	for turret in $turrets.get_children():
-		turret.init(target_obj)
-	
 	my_path = path
 	translation = my_path[0]
 	target_point = my_path[randi() % my_path.size()]
 	active = true
+	
+	for i in 40:
+		var pos = Vector3(rand_range(-1,1), rand_range(-1,1), rand_range(-1,1))
+		pos = pos.normalized()
+		pos *= 10
+		var new_mine = mine.instance()
+		add_child(new_mine)
+		new_mine.translation = pos
+		new_mine.init(target_obj)
 
 func _ready():
 	pass

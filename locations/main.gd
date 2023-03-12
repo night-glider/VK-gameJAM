@@ -3,13 +3,13 @@ extends Spatial
 const race = preload("res://objects/game_modes/race.tscn")
 const boss_mode = preload("res://objects/game_modes/boss.tscn")
 
-var score_to_win:int = 1000
+var score_to_win:int = 500
 var turret_count:int = 5
 
 var race_leaderboard = [
-	{"nick":"nighty", "value":0.2},
-	{"nick":"wuxhiff", "value":0.1},
-	{"nick":"glkppr", "value":0.3}
+	{"nick":"nighty", "value":4.23},
+	{"nick":"wuxhiff", "value":1.12},
+	{"nick":"glkppr", "value":3.31}
 ]
 
 func sort_leaderboard(a, b):

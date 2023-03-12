@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://objects/game_modes/race.gd" type="Script" id=1]
+[ext_resource path="res://OST/bl.mp3" type="AudioStream" id=2]
 
 [node name="Spatial" type="Spatial"]
 script = ExtResource( 1 )
@@ -12,3 +13,8 @@ billboard = 1
 double_sided = false
 alpha_cut = 1
 text = "ОЧКИ: 0"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+autoplay = true
+bus = "Music"

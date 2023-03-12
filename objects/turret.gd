@@ -30,7 +30,7 @@ func is_obj_visible():
 
 	track_pos = lerp(track_pos, track_object.global_translation + Vector3(0,0.25,0), 0.025)
 	
-	look_at( track_pos, Vector3.UP )
+	$head.look_at( track_pos, Vector3.UP )
 	return true
 
 func _ready():
@@ -53,12 +53,13 @@ func hit():
 func _on_Timer_timeout():
 	if not obj_visible:
 		return
-	var new_explosion = explosion.instance()
-	get_parent().add_child(new_explosion)
 	$head/pointer/RayCast.force_raycast_update()
 	if not $head/pointer/RayCast.is_colliding():
 		return
+	var new_explosion = explosion.instance()
+	get_parent().add_child(new_explosion)
 	new_explosion.global_translation = $head/pointer/RayCast.get_collision_point()
+	$AudioStreamPlayer3D.play()
 	if new_explosion.global_translation.distance_to(track_object.global_translation) > 2:
 		return
 	var vel = global_translation.direction_to(track_object.global_translation)

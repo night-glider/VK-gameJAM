@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://objects/game_modes/boss.gd" type="Script" id=1]
+[ext_resource path="res://OST/Boss_.mp3" type="AudioStream" id=2]
 
 [node name="boss" type="Spatial"]
 script = ExtResource( 1 )
@@ -17,5 +18,10 @@ text = "ПОБЕДА!!!"
 [node name="game_end" type="Timer" parent="."]
 wait_time = 7.0
 one_shot = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+autoplay = true
+bus = "Music"
 
 [connection signal="timeout" from="game_end" to="." method="_on_game_end_timeout"]

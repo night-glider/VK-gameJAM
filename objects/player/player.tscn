@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://objects/player/player.gd" type="Script" id=1]
 [ext_resource path="res://sprites/cloud.png" type="Texture" id=2]
 [ext_resource path="res://objects/player/pickaxe.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sounds/big_fall.wav" type="AudioStream" id=4]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.25
@@ -88,6 +89,7 @@ color_ramp = SubResource( 9 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0 )
 cast_shadow = 0
 emitting = false
+amount = 16
 one_shot = true
 explosiveness = 1.0
 local_coords = false
@@ -95,25 +97,11 @@ mesh = SubResource( 8 )
 spread = 180.0
 flatness = 0.8
 gravity = Vector3( 0, 0, 0 )
-initial_velocity = 1.0
+initial_velocity = 2.0
 initial_velocity_random = 0.5
 damping = 0.5
 scale_amount = 1.5
 color_ramp = SubResource( 9 )
-
-[node name="Label" type="Label" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -89.0
-margin_top = -25.0
-margin_right = -5.0
-margin_bottom = -5.0
-grow_horizontal = 0
-grow_vertical = 0
-text = "test value"
-align = 2
 
 [node name="aim" type="ReferenceRect" parent="."]
 anchor_left = 0.5
@@ -143,3 +131,6 @@ texture_under = SubResource( 12 )
 texture_progress = SubResource( 14 )
 fill_mode = 6
 nine_patch_stretch = true
+
+[node name="fall_sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
